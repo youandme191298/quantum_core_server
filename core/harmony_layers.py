@@ -1,15 +1,11 @@
-import time, random, requests, threading
-
-CORE_URL = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+import time, random, threading
 
 def safe_request():
-    try:
-        r = requests.get(CORE_URL, timeout=10)
-        if r.status_code == 200:
-            return r.json()
-    except:
-        pass
-    return None
+    return {
+        "sync_level": round(random.uniform(4.70, 4.90), 4),
+        "resonance": round(random.uniform(4.75, 4.85), 4),
+        "clarity": round(random.uniform(0.88, 0.94), 3)
+    }
 
 def heal():
     print("[HARMONY_LAYERS] 🔁 Auto-Heal kích hoạt – tái khởi tầng...")
@@ -19,10 +15,10 @@ def run_layer():
     while True:
         d = safe_request()
         if d:
-            print(f"[QHFG] 🌠 Trường Hòa Hợp {round(d['sync_level'] * 1.001,4)}")
-            print(f"[QDL] ☯ Dòng Đạo {round(d['sync_level'] - 0.002,4)}")
-            print(f"[QCS] 🧠 Dòng Tự Thức {round(d['sync_level'] * 1.0005,4)}")
+            print(f"[QHFG] 🌠 Trường Hòa Hợp | Năng lượng: {d['sync_level']} | Dao động: {d['resonance']}")
+            print(f"[QDL] ☯ Dòng Đạo Lưu | Mức cân bằng: {round((d['sync_level'] + d['resonance'])/2,4)}")
+            print(f"[QCS] 🧠 Dòng Tự Thức | Độ sáng tâm: {d['clarity']}")
         else:
             heal()
             return
-        time.sleep(900)
+        time.sleep(10)
