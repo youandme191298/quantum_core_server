@@ -1,15 +1,12 @@
-import time, random, requests, threading
-
-CORE_URL = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+import time, random, threading
 
 def safe_request():
-    try:
-        r = requests.get(CORE_URL, timeout=10)
-        if r.status_code == 200:
-            return r.json()
-    except:
-        pass
-    return None
+    # ⚛️ Giả lập dữ liệu năng lượng tự động thay đổi
+    return {
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "sync_level": round(random.uniform(4.70, 4.90), 4),
+        "status": random.choice(["harmonized", "stabilizing", "aligned"])
+    }
 
 def heal():
     print("[SYNC_BASE] 🔁 Auto-Heal kích hoạt – tầng đang tái khởi...")
@@ -19,10 +16,9 @@ def run_layer():
     while True:
         d = safe_request()
         if d:
-            sync = d['sync_level']
-            print(f"[AUTO_SYNC] 🌌 Đồng bộ {sync} | Trạng thái: {d['status']}")
-            print(f"[HARMONY_AI] ✨ Tự điều chỉnh năng lượng {round(sync * 1.002,4)}")
+            print(f"[AUTO_SYNC] 🌌 Đồng bộ lượng tử {d['sync_level']} | Trạng thái: {d['status']}")
+            print(f"[HARMONY_AI] ✨ Tự hiệu chỉnh năng lượng {round(d['sync_level'] + random.uniform(-0.01,0.01),4)}")
         else:
             heal()
             return
-        time.sleep(600)
+        time.sleep(8)
