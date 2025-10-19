@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
-from qiskit import QuantumCircuit, Aer, execute
+from qiskit import QuantumCircuit
+from qiskit_aer import Aer  # ✅ dùng qiskit_aer riêng biệt
+from qiskit import execute
 import threading, time, random
 
 app = Flask(__name__)
