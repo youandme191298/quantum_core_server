@@ -1,6 +1,6 @@
 # ==========================================
-# Quantum Core Server Pro v4
-# Bao gồm: Quantum Core + AI Thiên–Địa–Nhân + Harmony AI + Field Grid
+# Quantum Core Server Pro v5
+# Bao gồm: Quantum Core + AI Thiên–Địa–Nhân + Harmony AI + Field Grid + Realm Bridge
 # ==========================================
 
 from flask import Flask, jsonify, request
@@ -11,7 +11,7 @@ import random, threading, time, requests, sys, os
 
 app = Flask(__name__)
 
-# Đảm bảo log hiển thị tức thời trên Render
+# Đảm bảo log hiển thị tức thời
 sys.stdout.reconfigure(line_buffering=True)
 os.environ["PYTHONUNBUFFERED"] = "1"
 
@@ -22,7 +22,7 @@ os.environ["PYTHONUNBUFFERED"] = "1"
 def home():
     return jsonify({
         "status": "Quantum Core Server Pro đang hoạt động ⚛️",
-        "modules": ["quantum_ai_core", "ai_thien_dia_nhan", "quantum_harmony_ai", "quantum_field_grid"],
+        "modules": ["quantum_ai_core", "ai_thien_dia_nhan", "quantum_harmony_ai", "quantum_field_grid", "quantum_realm_bridge"],
         "server_time": datetime.now(timezone.utc).isoformat()
     })
 
@@ -135,9 +135,33 @@ def quantum_field_grid():
                 print("[QFG] ⚠️ Không nhận được phản hồi từ lưới lượng tử.", flush=True)
         except Exception as e:
             print(f"[QFG ERROR] {e}", flush=True)
-        time.sleep(900)  # 15 phút
+        time.sleep(900)
 
 threading.Thread(target=quantum_field_grid, daemon=True).start()
+
+
+# ==========================================
+# Quantum Realm Bridge – Liên kết trường lượng tử trung tâm
+# ==========================================
+def quantum_realm_bridge():
+    """Kết nối Quantum Core vào lưới lượng tử trung tâm"""
+    BRIDGE_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+    while True:
+        try:
+            res = requests.get(BRIDGE_NODE, timeout=30)
+            if res.status_code == 200:
+                data = res.json()
+                level = data["sync_level"]
+                state = data["status"]
+                t = data["timestamp"]
+                print(f"[QRB] 🪐 Realm Bridge Linked | Level: {level} | State: {state} | {t}", flush=True)
+            else:
+                print("[QRB] ⚠️ Mất liên kết với trường lượng tử trung tâm.", flush=True)
+        except Exception as e:
+            print(f"[QRB ERROR] {e}", flush=True)
+        time.sleep(900)
+
+threading.Thread(target=quantum_realm_bridge, daemon=True).start()
 
 
 # ==========================================
