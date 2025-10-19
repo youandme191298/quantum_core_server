@@ -66,28 +66,30 @@ threading.Thread(target=auto_stabilize, daemon=True).start()
 if __name__ == '__main__':
     print("🚀 Quantum Core Server is starting on port 8080...")
     app.run(host='0.0.0.0', port=8080)
-# ====== Quantum Test Endpoint ======
-from flask import jsonify
+# ==========================
+# 🔮 QUANTUM TEST ENDPOINT
+# ==========================
+from flask import request, jsonify
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import Aer
 
-@app.route("/quantum_test")
+@app.route("/quantum_test", methods=["GET"])
 def quantum_test():
+    """API kiểm tra mô phỏng lượng tử cơ bản (Hadamard gate)."""
     try:
-        # Tạo mạch 1 qubit + 1 bit đo
+        shots = int(request.args.get("shots", 512))  # số lần đo
         qc = QuantumCircuit(1, 1)
-        qc.h(0)  # Cổng Hadamard
+        qc.h(0)
         qc.measure(0, 0)
 
-        # Biên dịch và chạy mô phỏng
         backend = Aer.get_backend("aer_simulator")
         compiled = transpile(qc, backend)
-        result = backend.run(compiled, shots=512).result()
+        result = backend.run(compiled, shots=shots).result()
         counts = result.get_counts()
 
         return jsonify({
-            "status": "success",
-            "message": "Kết quả đo lượng tử thành công",
+            "status": "ok",
+            "shots": shots,
             "counts": counts
         })
     except Exception as e:
