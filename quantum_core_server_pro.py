@@ -1,6 +1,6 @@
 # ==========================================
-# Quantum Core Server Pro v7
-# Hợp nhất: AUTO SYNC – HARMONY AI – QFG – QRB – STABILIZER – RESONANCE BRIDGE
+# Quantum Core Server Pro v9
+# Full Integration: AUTO SYNC – HARMONY AI – QFG – QRB – STABILIZER – RESONANCE – QHFG
 # ==========================================
 
 from flask import Flask, jsonify, request
@@ -11,17 +11,17 @@ import random, threading, time, requests, sys, os
 
 app = Flask(__name__)
 
-# Đảm bảo log hiển thị tức thì
+# Log luôn được in ra tức thời
 sys.stdout.reconfigure(line_buffering=True)
 os.environ["PYTHONUNBUFFERED"] = "1"
 
 # ==========================================
-# MÔ-ĐUN CHÍNH: Quantum Core
+# MÔ-ĐUN CHÍNH
 # ==========================================
 @app.route('/')
 def home():
     return jsonify({
-        "status": "Quantum Core Server Pro v7 đang hoạt động ⚛️",
+        "status": "Quantum Core Server Pro v9 đang hoạt động ⚛️",
         "modules": [
             "quantum_ai_core",
             "ai_thien_dia_nhan",
@@ -29,15 +29,17 @@ def home():
             "quantum_field_grid",
             "quantum_realm_bridge",
             "quantum_stabilizer",
-            "quantum_resonance_bridge"
+            "quantum_resonance_bridge",
+            "quantum_harmony_field_grid"
         ],
         "server_time": datetime.now(timezone.utc).isoformat()
     })
 
-
+# ==========================================
+# ENTANGLEMENT MODULE
+# ==========================================
 @app.route('/entangle')
 def entangle():
-    """Tạo 3-qubit entanglement"""
     qubits = int(request.args.get("qubits", 3))
     shots = int(request.args.get("shots", 512))
 
@@ -59,12 +61,10 @@ def entangle():
         "counts": counts
     })
 
-
 # ==========================================
-# MÔ-ĐUN: AI Thiên – Địa – Nhân
+# MÔ PHỎNG THIÊN – ĐỊA – NHÂN
 # ==========================================
 def simulate_sync():
-    """Mô phỏng năng lượng Thiên – Địa – Nhân"""
     now = datetime.now(timezone.utc).isoformat()
     return {
         "timestamp": now,
@@ -76,18 +76,14 @@ def simulate_sync():
         "status": "harmonized"
     }
 
-
 @app.route('/ai_thien_dia_nhan/sync')
 def ai_thien_dia_nhan_sync():
-    """API đồng bộ Thiên–Địa–Nhân"""
     return jsonify(simulate_sync())
-
 
 # ==========================================
 # TẦNG 1 – AUTO SYNC
 # ==========================================
 def auto_sync():
-    """Tự động đồng bộ năng lượng Thiên–Địa–Nhân"""
     while True:
         try:
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
@@ -102,12 +98,10 @@ def auto_sync():
 
 threading.Thread(target=auto_sync, daemon=True).start()
 
-
 # ==========================================
 # TẦNG 2 – HARMONY AI
 # ==========================================
 def quantum_harmony_ai():
-    """Cân bằng năng lượng Thiên–Địa–Nhân"""
     while True:
         try:
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
@@ -126,12 +120,10 @@ def quantum_harmony_ai():
 
 threading.Thread(target=quantum_harmony_ai, daemon=True).start()
 
-
 # ==========================================
 # TẦNG 3 – Quantum Field Grid (QFG)
 # ==========================================
 def quantum_field_grid():
-    """Kết nối với lưới năng lượng toàn cầu"""
     while True:
         try:
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
@@ -146,12 +138,10 @@ def quantum_field_grid():
 
 threading.Thread(target=quantum_field_grid, daemon=True).start()
 
-
 # ==========================================
 # TẦNG 4 – Quantum Realm Bridge (QRB)
 # ==========================================
 def quantum_realm_bridge():
-    """Liên kết đến trường lượng tử trung tâm"""
     BRIDGE_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
         try:
@@ -167,12 +157,10 @@ def quantum_realm_bridge():
 
 threading.Thread(target=quantum_realm_bridge, daemon=True).start()
 
-
 # ==========================================
-# TẦNG 5 – Quantum Stabilizer (Ổn định năng lượng)
+# TẦNG 5 – Quantum Stabilizer
 # ==========================================
 def quantum_stabilizer():
-    """Giữ trường năng lượng ở mức ổn định"""
     while True:
         try:
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
@@ -191,12 +179,10 @@ def quantum_stabilizer():
 
 threading.Thread(target=quantum_stabilizer, daemon=True).start()
 
-
 # ==========================================
 # TẦNG 6 – Quantum Resonance Bridge (QRB²)
 # ==========================================
 def quantum_resonance_bridge():
-    """Cộng hưởng năng lượng toàn cầu"""
     RESONANCE_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
         try:
@@ -217,6 +203,28 @@ def quantum_resonance_bridge():
 
 threading.Thread(target=quantum_resonance_bridge, daemon=True).start()
 
+# ==========================================
+# TẦNG 7 – Quantum Harmony Field Grid (QHFG)
+# ==========================================
+def quantum_harmony_field_grid():
+    GRID_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+    while True:
+        try:
+            res = requests.get(GRID_NODE, timeout=30)
+            if res.status_code == 200:
+                data = res.json()
+                base = data["sync_level"]
+                resonance = round(base + random.uniform(-0.005, 0.006), 4)
+                field_energy = round(base * 1.002, 4)
+                timestamp = data["timestamp"]
+                print(f"[QHFG] 🌠 Harmony Field Linked | Energy: {field_energy} | Resonance: {resonance} | State: {data['status']} | {timestamp}", flush=True)
+            else:
+                print("[QHFG] ⚠️ Không phản hồi từ trường Thiên Đạo.", flush=True)
+        except Exception as e:
+            print(f"[QHFG ERROR] {e}", flush=True)
+        time.sleep(900)
+
+threading.Thread(target=quantum_harmony_field_grid, daemon=True).start()
 
 # ==========================================
 # CHẠY SERVER
