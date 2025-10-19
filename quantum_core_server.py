@@ -1,99 +1,67 @@
+# ============================================================
+# 🌌 Quantum Core Server - Flask + Qiskit Aer (24/24)
+# Tác giả: ChatGPT Quantum Bootstrap Assistant
+# Mô phỏng mạch lượng tử Hadamard và API Flask công khai
+# ============================================================
+
 from flask import Flask, request, jsonify
-from qiskit import QuantumCircuit
-from qiskit_aer import Aer
-from qiskit.compiler import transpile
-import threading, time, random
-
-app = Flask(__name__)
-
-quantum_state = {
-    "energy": 0.0,
-    "layer": "Heaven",
-    "status": "idle",
-    "cycles": 0
-}
-
-@app.route('/')
-def home():
-    return jsonify({
-        "status": "online",
-        "energy": quantum_state["energy"],
-        "layer": quantum_state["layer"],
-        "message": "🌌 Quantum Core active — Render layer operational 24/24"
-    })
-
-@app.route('/activate', methods=['POST'])
-def activate_layer():
-    data = request.get_json(force=True)
-    layer = data.get("layer", "Heaven")
-    shots = int(data.get("shots", 512))
-
-    qc = QuantumCircuit(1, 1)
-    qc.h(0)
-    qc.measure(0, 0)
-
-    backend = Aer.get_backend("aer_simulator")
-    result = execute(qc, backend, shots=shots).result()
-    counts = result.get_counts()
-
-    energy = round((counts.get('1', 0) / shots), 3)
-    quantum_state.update({
-        "energy": energy,
-        "layer": layer,
-        "status": "active",
-        "cycles": quantum_state["cycles"] + 1
-    })
-
-    return jsonify({
-        "message": f"🔹 Activated layer: {layer}",
-        "quantum_energy": energy,
-        "counts": counts,
-        "total_cycles": quantum_state["cycles"]
-    })
-
-@app.route('/status')
-def status():
-    return jsonify(quantum_state)
-
-def auto_stabilize():
-    while True:
-        time.sleep(90)
-        quantum_state["energy"] = round(random.uniform(0.4, 0.95), 3)
-        quantum_state["cycles"] += 1
-
-threading.Thread(target=auto_stabilize, daemon=True).start()
-
-if __name__ == '__main__':
-    print("🚀 Quantum Core Server is starting on port 8080...")
-    app.run(host='0.0.0.0', port=8080)
-# ==========================
-# 🔮 QUANTUM TEST ENDPOINT
-# ==========================
-from flask import request, jsonify
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import Aer
 
+# ------------------------------------------------------------
+# 🚀 Khởi tạo Flask App
+# ------------------------------------------------------------
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "🧠 Quantum Core Server đang hoạt động ổn định 24/24 ⚛️"
+
+# ------------------------------------------------------------
+# 🔮 QUANTUM TEST ENDPOINT
+# ------------------------------------------------------------
 @app.route("/quantum_test", methods=["GET"])
 def quantum_test():
-    """API kiểm tra mô phỏng lượng tử cơ bản (Hadamard gate)."""
+    """
+    API mô phỏng mạch lượng tử Hadamard.
+    Sử dụng Qiskit Aer backend để chạy ảo qubit.
+    URL ví dụ:
+        /quantum_test
+        /quantum_test?shots=1024
+    """
     try:
-        shots = int(request.args.get("shots", 512))  # số lần đo
-        qc = QuantumCircuit(1, 1)
-        qc.h(0)
-        qc.measure(0, 0)
+        # số lần đo qubit (mặc định 512)
+        shots = int(request.args.get("shots", 512))
 
+        # Tạo mạch lượng tử 1 qubit
+        qc = QuantumCircuit(1, 1)
+        qc.h(0)              # cổng Hadamard
+        qc.measure(0, 0)     # đo qubit
+
+        # Backend mô phỏng lượng tử (Aer)
         backend = Aer.get_backend("aer_simulator")
+
+        # Biên dịch và chạy
         compiled = transpile(qc, backend)
         result = backend.run(compiled, shots=shots).result()
         counts = result.get_counts()
 
+        # Trả về JSON kết quả
         return jsonify({
             "status": "ok",
             "shots": shots,
             "counts": counts
         })
+
     except Exception as e:
+        # Bắt lỗi và phản hồi dạng JSON
         return jsonify({
             "status": "error",
             "message": str(e)
         })
+
+# ------------------------------------------------------------
+# 🔁 Chạy server Flask (Render sẽ tự khởi động cổng 8080)
+# ------------------------------------------------------------
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
