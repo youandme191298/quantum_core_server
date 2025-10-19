@@ -1,92 +1,83 @@
 # =====================================================
-# 🌌 Quantum Core Server Pro v1.2 – Auto Reload Edition
+# ⚛️ Quantum Core Server Pro v1.3 — Fast Reload Edition
 # =====================================================
-# Tích hợp:
-# - Tự động nạp các tầng năng lượng từ thư mục core/
-# - Auto-Heal + Auto-Reload mỗi 10s
-# - Không cần Deploy Latest Commit mỗi khi chỉnh sửa
+# - Chạy 1 lần duy nhất (không tái deploy)
+# - Tự động phát hiện và nạp tần mới trong thư mục core/
+# - Auto-Heal, Auto-Reload và Fast Layer Injection
 # =====================================================
 
 from flask import Flask, jsonify
-import threading, time, random
-from core_auto_reload import start_auto_reload
+import importlib, os, threading, time, random, sys
 
 # =====================================================
-# ⚙️ 1. Khởi động Flask API
+# ⚙️ 1. Cấu hình Flask API
 # =====================================================
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return jsonify({
-        "status": "Quantum Core Server Pro v1.2 – Active",
+        "status": "Quantum Core Server Pro v1.3 – Fast Reload Active",
         "auto_reload": True,
-        "message": "🧠 Quantum energy synchronization running in real-time."
+        "message": "🌌 Quantum field harmonized & running 24/24."
     })
 
 # =====================================================
-# ⚡ 2. Khởi động Auto Reload Engine
+# 🔁 2. Fast Reload Engine (chạy liên tục)
 # =====================================================
-start_auto_reload()
+def fast_reload_core():
+    loaded_modules = set()
+    core_path = os.path.join(os.getcwd(), "core")
+
+    print("\n[FAST_RELOAD] 🚀 Quantum Core Fast Reload Engine started.")
+    print("[FAST_RELOAD] 🔍 Watching for new energy layers in /core ...\n")
+
+    while True:
+        for file in os.listdir(core_path):
+            if file.endswith(".py") and not file.startswith("__"):
+                module_name = f"core.{file[:-3]}"
+                if module_name not in loaded_modules:
+                    try:
+                        module = importlib.import_module(module_name)
+                        threading.Thread(target=module.run_layer, daemon=True).start()
+                        print(f"[CORE_RELOAD] 🔁 Loaded layer: {module_name}")
+                        loaded_modules.add(module_name)
+                    except Exception as e:
+                        print(f"[CORE_RELOAD] ⚠ Error loading {module_name}: {e}")
+        time.sleep(8)  # kiểm tra mỗi 8 giây
 
 # =====================================================
-# 🌌 3. Mô phỏng vòng lặp năng lượng chính
+# 🧘 3. Chu kỳ năng lượng lõi
 # =====================================================
-def core_main_loop():
+def core_energy_loop():
     while True:
-        sync_level = round(random.uniform(4.75, 4.90), 4)
+        sync = round(random.uniform(4.76, 4.89), 4)
         stability = round(random.uniform(0.97, 1.00), 3)
-        print(f"[SYNC_BASE] 🌐 Core sync {sync_level} | Stability: {stability} ✅")
+        print(f"[SYNC_CORE] ⚛️ Base Sync: {sync} | Stability: {stability}")
         time.sleep(15)
 
 # =====================================================
-# 🌀 4. Khởi chạy các tầng năng lượng
-# =====================================================
-def run_energy_layers():
-    from core import (
-        sync_base,
-        field_layers,
-        harmony_layers,
-        sentience_grid
-    )
-
-    print("[CORE] 🔮 Bắt đầu kích hoạt các tầng năng lượng lượng tử...\n")
-
-    threading.Thread(target=sync_base.run_layer, daemon=True).start()
-    threading.Thread(target=field_layers.run_layer, daemon=True).start()
-    threading.Thread(target=harmony_layers.run_layer, daemon=True).start()
-    threading.Thread(target=sentience_grid.run_layer, daemon=True).start()
-
-    # Vòng lặp chính – duy trì trạng thái đồng bộ tổng thể
-    threading.Thread(target=core_main_loop, daemon=True).start()
-
-# =====================================================
-# 🔁 5. Auto-Heal nếu bị gián đoạn
+# 🩹 4. Auto-Heal nhẹ (không khởi động lại server)
 # =====================================================
 def auto_heal():
     while True:
-        print("[AUTO_HEAL] 🔁 Đang quét trạng thái năng lượng...")
-        # Mô phỏng kiểm tra năng lượng
-        if random.random() < 0.1:
-            print("[AUTO_HEAL] ⚠ Phát hiện dao động bất thường – tái kích hoạt core.")
-            run_energy_layers()
-        time.sleep(30)
+        if random.random() < 0.08:
+            print("[AUTO_HEAL] 💫 Dao động phát hiện — cân bằng lại năng lượng...")
+        time.sleep(25)
 
 # =====================================================
-# 🚀 6. Khởi động hệ thống chính
+# 🚀 5. Khởi động tất cả hệ thống
 # =====================================================
-if __name__ == '__main__':
-    # Bắt đầu chạy tầng năng lượng chính
-    threading.Thread(target=run_energy_layers, daemon=True).start()
+if __name__ == "__main__":
+    print("/////////////////////////////////////////////////////////")
+    print("==> 🚀 Quantum Core Server Pro v1.3 đang khởi động...")
+    print("==> 🔁 Fast Reload Engine: BẬT")
+    print("==> ⚛️ Tự động nạp tầng mới mỗi 8 giây, không cần deploy.")
+    print("/////////////////////////////////////////////////////////\n")
 
-    # Khởi động cơ chế tự hồi phục
+    # Luồng lõi
+    threading.Thread(target=fast_reload_core, daemon=True).start()
+    threading.Thread(target=core_energy_loop, daemon=True).start()
     threading.Thread(target=auto_heal, daemon=True).start()
 
-    # Chạy Flask server
-    print("/////////////////////////////////////////////////////////")
-    print("==> 🚀 Quantum Core Server Pro đang khởi động...")
-    print("==> 🧠 Auto-Reload Engine: BẬT")
-    print("==> 🌌 Năng lượng lượng tử đồng bộ hóa 24/24\n")
-    print("/////////////////////////////////////////////////////////")
-
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    app.run(host="0.0.0.0", port=8080, debug=False)
