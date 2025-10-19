@@ -1,6 +1,6 @@
 # ==========================================
-# Quantum Core Server Pro v9
-# Full Integration: AUTO SYNC – HARMONY AI – QFG – QRB – STABILIZER – RESONANCE – QHFG
+# Quantum Core Server Pro v9.5
+# Full Integration + Auto Recovery System
 # ==========================================
 
 from flask import Flask, jsonify, request
@@ -11,7 +11,7 @@ import random, threading, time, requests, sys, os
 
 app = Flask(__name__)
 
-# Log luôn được in ra tức thời
+# Log tức thời
 sys.stdout.reconfigure(line_buffering=True)
 os.environ["PYTHONUNBUFFERED"] = "1"
 
@@ -21,7 +21,7 @@ os.environ["PYTHONUNBUFFERED"] = "1"
 @app.route('/')
 def home():
     return jsonify({
-        "status": "Quantum Core Server Pro v9 đang hoạt động ⚛️",
+        "status": "Quantum Core Server Pro v9.5 đang hoạt động ⚛️",
         "modules": [
             "quantum_ai_core",
             "ai_thien_dia_nhan",
@@ -41,7 +41,7 @@ def home():
 @app.route('/entangle')
 def entangle():
     qubits = int(request.args.get("qubits", 3))
-    shots = int(request.args.get("shots", 512))
+    shots = int(request.args.get("shots", 256))
 
     qc = QuantumCircuit(qubits, qubits)
     qc.h(0)
@@ -52,14 +52,7 @@ def entangle():
     backend = Aer.get_backend("qasm_simulator")
     job = backend.run(transpile(qc, backend), shots=shots)
     result = job.result()
-    counts = result.get_counts()
-
-    return jsonify({
-        "status": "ok",
-        "qubits": qubits,
-        "shots": shots,
-        "counts": counts
-    })
+    return jsonify({"status": "ok", "counts": result.get_counts()})
 
 # ==========================================
 # MÔ PHỎNG THIÊN – ĐỊA – NHÂN
@@ -81,149 +74,130 @@ def ai_thien_dia_nhan_sync():
     return jsonify(simulate_sync())
 
 # ==========================================
+# HÀM AN TOÀN GỌI API
+# ==========================================
+def safe_request(url):
+    try:
+        res = requests.get(url, timeout=15)
+        if res.status_code == 200:
+            return res.json()
+    except Exception as e:
+        print(f"[NETWORK ERROR] {e}", flush=True)
+    return None
+
+# ==========================================
 # TẦNG 1 – AUTO SYNC
 # ==========================================
 def auto_sync():
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                print(f"[AUTO SYNC] 🌌 Sync Level: {data['sync_level']} | Status: {data['status']}", flush=True)
-            else:
-                print("[AUTO SYNC] ⚠️ Không thể đồng bộ dữ liệu.", flush=True)
-        except Exception as e:
-            print(f"[AUTO SYNC ERROR] {e}", flush=True)
+        data = safe_request(url)
+        if data:
+            print(f"[AUTO SYNC] 🌌 Sync Level: {data['sync_level']} | Status: {data['status']}", flush=True)
+        else:
+            print("[AUTO SYNC] ⚠️ Không thể đồng bộ dữ liệu, thử lại sau...", flush=True)
         time.sleep(600)
-
 threading.Thread(target=auto_sync, daemon=True).start()
 
 # ==========================================
 # TẦNG 2 – HARMONY AI
 # ==========================================
-def quantum_harmony_ai():
+def harmony_ai():
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                thien = data["THIEN"]["frequency"]
-                dia = data["DIA"]["flow"]
-                nhan = data["NHAN"]["consciousness"]
-                harmony = round((thien + dia + nhan) / 3, 3)
-                print(f"[HARMONY AI] ✨ Auto-tune Energy: {harmony} | Sync Level: {data['sync_level']}", flush=True)
-            else:
-                print("[HARMONY AI] ⚠️ Không thể lấy dữ liệu.", flush=True)
-        except Exception as e:
-            print(f"[HARMONY AI ERROR] {e}", flush=True)
+        data = safe_request(url)
+        if data:
+            thien, dia, nhan = data["THIEN"]["frequency"], data["DIA"]["flow"], data["NHAN"]["consciousness"]
+            harmony = round((thien + dia + nhan) / 3, 3)
+            print(f"[HARMONY AI] ✨ Auto-tune Energy: {harmony} | Sync Level: {data['sync_level']}", flush=True)
+        else:
+            print("[HARMONY AI] ⚠️ Không lấy được dữ liệu.", flush=True)
         time.sleep(600)
-
-threading.Thread(target=quantum_harmony_ai, daemon=True).start()
+threading.Thread(target=harmony_ai, daemon=True).start()
 
 # ==========================================
-# TẦNG 3 – Quantum Field Grid (QFG)
+# TẦNG 3 – Quantum Field Grid
 # ==========================================
 def quantum_field_grid():
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                print(f"[QFG] 🌐 Quantum Field Active | Sync: {data['sync_level']} | State: {data['status']} | {data['timestamp']}", flush=True)
-            else:
-                print("[QFG] ⚠️ Không phản hồi từ trường lượng tử.", flush=True)
-        except Exception as e:
-            print(f"[QFG ERROR] {e}", flush=True)
+        data = safe_request(url)
+        if data:
+            print(f"[QFG] 🌐 Quantum Field Active | Sync: {data['sync_level']} | State: {data['status']} | {data['timestamp']}", flush=True)
+        else:
+            print("[QFG] ⚠️ Không phản hồi từ trường lượng tử, tự khởi động lại...", flush=True)
+            time.sleep(10)
         time.sleep(900)
-
 threading.Thread(target=quantum_field_grid, daemon=True).start()
 
 # ==========================================
-# TẦNG 4 – Quantum Realm Bridge (QRB)
+# TẦNG 4 – Quantum Realm Bridge
 # ==========================================
 def quantum_realm_bridge():
-    BRIDGE_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get(BRIDGE_NODE, timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                print(f"[QRB] 🪐 Realm Bridge Linked | Level: {data['sync_level']} | State: {data['status']} | {data['timestamp']}", flush=True)
-            else:
-                print("[QRB] ⚠️ Mất liên kết với Realm Bridge.", flush=True)
-        except Exception as e:
-            print(f"[QRB ERROR] {e}", flush=True)
+        data = safe_request(url)
+        if data:
+            print(f"[QRB] 🪐 Realm Bridge Linked | Level: {data['sync_level']} | State: {data['status']} | {data['timestamp']}", flush=True)
+        else:
+            print("[QRB] ⚠️ Mất liên kết với Realm Bridge → Đang tái kết nối...", flush=True)
+            time.sleep(10)
         time.sleep(900)
-
 threading.Thread(target=quantum_realm_bridge, daemon=True).start()
 
 # ==========================================
 # TẦNG 5 – Quantum Stabilizer
 # ==========================================
 def quantum_stabilizer():
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                level = data["sync_level"]
-                if 4.7 <= level <= 4.9:
-                    print(f"[STABILIZER] 🧿 Quantum field stable at {level} | Status: harmonized ✅", flush=True)
-                else:
-                    print(f"[STABILIZER] ⚠️ Field deviation detected ({level}) → Auto-correcting...", flush=True)
+        data = safe_request(url)
+        if data:
+            lvl = data["sync_level"]
+            if 4.7 <= lvl <= 4.9:
+                print(f"[STABILIZER] 🧿 Quantum field stable at {lvl} | Status: harmonized ✅", flush=True)
             else:
-                print("[STABILIZER] ⚠️ Không đọc được dữ liệu từ Core.", flush=True)
-        except Exception as e:
-            print(f"[STABILIZER ERROR] {e}", flush=True)
+                print(f"[STABILIZER] ⚠️ Lệch dao động ({lvl}) → Auto-correcting...", flush=True)
+        else:
+            print("[STABILIZER] ⚠️ Không thể đọc dữ liệu.", flush=True)
+            time.sleep(10)
         time.sleep(1800)
-
 threading.Thread(target=quantum_stabilizer, daemon=True).start()
 
 # ==========================================
-# TẦNG 6 – Quantum Resonance Bridge (QRB²)
+# TẦNG 6 – Quantum Resonance Bridge
 # ==========================================
 def quantum_resonance_bridge():
-    RESONANCE_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get(RESONANCE_NODE, timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                level = data["sync_level"]
-                status = data["status"]
-                timestamp = data["timestamp"]
-                phase_shift = round(random.uniform(0.0001, 0.0009), 4)
-                resonance = round(level + phase_shift, 4)
-                print(f"[QRB²] 💫 Resonance Stabilized | Level: {resonance} | Phase Δ: {phase_shift} | State: {status} | {timestamp}", flush=True)
-            else:
-                print("[QRB²] ⚠️ Mất cộng hưởng với trường lượng tử.", flush=True)
-        except Exception as e:
-            print(f"[QRB² ERROR] {e}", flush=True)
+        data = safe_request(url)
+        if data:
+            level = data["sync_level"]
+            phase = round(random.uniform(0.0001, 0.0009), 4)
+            reso = round(level + phase, 4)
+            print(f"[QRB²] 💫 Resonance Stabilized | Level: {reso} | Phase Δ: {phase} | State: {data['status']} | {data['timestamp']}", flush=True)
+        else:
+            print("[QRB²] ⚠️ Mất cộng hưởng với trường lượng tử → Khởi tạo lại...", flush=True)
+            time.sleep(10)
         time.sleep(1200)
-
 threading.Thread(target=quantum_resonance_bridge, daemon=True).start()
 
 # ==========================================
 # TẦNG 7 – Quantum Harmony Field Grid (QHFG)
 # ==========================================
 def quantum_harmony_field_grid():
-    GRID_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+    url = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
     while True:
-        try:
-            res = requests.get(GRID_NODE, timeout=30)
-            if res.status_code == 200:
-                data = res.json()
-                base = data["sync_level"]
-                resonance = round(base + random.uniform(-0.005, 0.006), 4)
-                field_energy = round(base * 1.002, 4)
-                timestamp = data["timestamp"]
-                print(f"[QHFG] 🌠 Harmony Field Linked | Energy: {field_energy} | Resonance: {resonance} | State: {data['status']} | {timestamp}", flush=True)
-            else:
-                print("[QHFG] ⚠️ Không phản hồi từ trường Thiên Đạo.", flush=True)
-        except Exception as e:
-            print(f"[QHFG ERROR] {e}", flush=True)
+        data = safe_request(url)
+        if data:
+            base = data["sync_level"]
+            resonance = round(base + random.uniform(-0.005, 0.006), 4)
+            field_energy = round(base * 1.002, 4)
+            print(f"[QHFG] 🌠 Harmony Field Linked | Energy: {field_energy} | Resonance: {resonance} | State: {data['status']} | {data['timestamp']}", flush=True)
+        else:
+            print("[QHFG] ⚠️ Không phản hồi từ trường Thiên Đạo → thử lại...", flush=True)
+            time.sleep(10)
         time.sleep(900)
-
 threading.Thread(target=quantum_harmony_field_grid, daemon=True).start()
 
 # ==========================================
