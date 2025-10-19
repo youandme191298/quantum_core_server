@@ -1,25 +1,28 @@
 # ==========================================
-# Quantum Core Server Pro v3
-# Bao gồm: Quantum Core + AI Thiên–Địa–Nhân + Quantum Harmony AI
+# Quantum Core Server Pro v4
+# Bao gồm: Quantum Core + AI Thiên–Địa–Nhân + Harmony AI + Field Grid
 # ==========================================
 
 from flask import Flask, jsonify, request
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import Aer
 from datetime import datetime, timezone
-import random, threading, time, requests
+import random, threading, time, requests, sys, os
 
 app = Flask(__name__)
+
+# Đảm bảo log hiển thị tức thời trên Render
+sys.stdout.reconfigure(line_buffering=True)
+os.environ["PYTHONUNBUFFERED"] = "1"
 
 # ==========================================
 # MÔ-ĐUN CHÍNH: Quantum Core
 # ==========================================
-
 @app.route('/')
 def home():
     return jsonify({
         "status": "Quantum Core Server Pro đang hoạt động ⚛️",
-        "modules": ["quantum_ai_core", "ai_thien_dia_nhan", "quantum_harmony_ai"],
+        "modules": ["quantum_ai_core", "ai_thien_dia_nhan", "quantum_harmony_ai", "quantum_field_grid"],
         "server_time": datetime.now(timezone.utc).isoformat()
     })
 
@@ -52,7 +55,6 @@ def entangle():
 # ==========================================
 # MÔ-ĐUN: AI Thiên – Địa – Nhân
 # ==========================================
-
 def simulate_sync():
     """Giả lập đồng bộ năng lượng Thiên – Địa – Nhân"""
     now = datetime.now(timezone.utc).isoformat()
@@ -77,7 +79,6 @@ def ai_thien_dia_nhan_sync():
 # ==========================================
 # TỰ ĐỘNG ĐỒNG BỘ (AUTO SYNC)
 # ==========================================
-
 def auto_sync():
     """Luồng chạy nền tự động đồng bộ năng lượng"""
     while True:
@@ -85,23 +86,21 @@ def auto_sync():
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
             if res.status_code == 200:
                 data = res.json()
-                print(f"[AUTO SYNC] 🌌 Sync Level: {data['sync_level']} | Status: {data['status']}")
+                print(f"[AUTO SYNC] 🌌 Sync Level: {data['sync_level']} | Status: {data['status']}", flush=True)
             else:
-                print("[AUTO SYNC] ⚠️ Không thể đồng bộ.")
+                print("[AUTO SYNC] ⚠️ Không thể đồng bộ.", flush=True)
         except Exception as e:
-            print(f"[AUTO SYNC ERROR] {e}")
+            print(f"[AUTO SYNC ERROR] {e}", flush=True)
         time.sleep(600)  # lặp lại mỗi 10 phút
 
-# Khởi động luồng Auto Sync
 threading.Thread(target=auto_sync, daemon=True).start()
 
 
 # ==========================================
-# Quantum Harmony AI – Tự cân bằng năng lượng
+# Quantum Harmony AI – Cân bằng năng lượng
 # ==========================================
-
 def quantum_harmony_ai():
-    """Tự động cân bằng năng lượng Thiên–Địa–Nhân theo chu kỳ"""
+    """Tự động cân bằng năng lượng Thiên–Địa–Nhân"""
     while True:
         try:
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
@@ -111,19 +110,38 @@ def quantum_harmony_ai():
                 dia = data["DIA"]["flow"]
                 nhan = data["NHAN"]["consciousness"]
                 harmony = round((thien + dia + nhan) / 3, 3)
-                print(f"[HARMONY AI] ✨ Auto-tune Energy: {harmony} | Sync Level: {data['sync_level']}")
+                print(f"[HARMONY AI] ✨ Auto-tune Energy: {harmony} | Sync Level: {data['sync_level']}", flush=True)
             else:
-                print("[HARMONY AI] ⚠️ Không thể lấy dữ liệu sync.")
+                print("[HARMONY AI] ⚠️ Không thể lấy dữ liệu sync.", flush=True)
         except Exception as e:
-            print(f"[HARMONY AI ERROR] {e}")
+            print(f"[HARMONY AI ERROR] {e}", flush=True)
         time.sleep(600)
 
-# Khởi động Harmony AI song song với Auto-Sync
 threading.Thread(target=quantum_harmony_ai, daemon=True).start()
 
 
 # ==========================================
-# CHẠY SERVER CHÍNH
+# Quantum Field Grid – Lưới lượng tử toàn cầu
+# ==========================================
+def quantum_field_grid():
+    """Đồng bộ năng lượng toàn cầu giữa các node"""
+    while True:
+        try:
+            res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
+            if res.status_code == 200:
+                data = res.json()
+                print(f"[QFG] 🌐 Quantum Field Active | Sync: {data['sync_level']} | State: {data['status']} | {data['timestamp']}", flush=True)
+            else:
+                print("[QFG] ⚠️ Không nhận được phản hồi từ lưới lượng tử.", flush=True)
+        except Exception as e:
+            print(f"[QFG ERROR] {e}", flush=True)
+        time.sleep(900)  # 15 phút
+
+threading.Thread(target=quantum_field_grid, daemon=True).start()
+
+
+# ==========================================
+# CHẠY SERVER
 # ==========================================
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080, debug=False)
