@@ -83,7 +83,7 @@ def home():
     return jsonify({
         "status": "online",
         "message": "Quantum Core Server PRO đang hoạt động ⚛️",
-        "routes": ["/entangle?qubits=3&shots=512", "/ai/status"]
+        "routes": ["/entangle?qubits=3&shots=512", "/ai/status", "/ai/run_once"]
     })
 
 
@@ -106,7 +106,6 @@ def entangle():
         })
     except Exception as e:
         return jsonify({"status": "error", "error": str(e)})
-
 
 @app.route('/status')
 def status():
@@ -171,14 +170,14 @@ def stop_ai_thread():
 def ai_status():
     return jsonify({"running": _ai_running, "interval": INTERVAL_SECONDS, "shots": SHOTS})
 
-@app.route('/ai/start', methods=['POST'])
+@app.route('/ai/start', methods=['GET', 'POST'])
 def ai_start():
     if start_ai_thread():
         return jsonify({"status": "started", "interval": INTERVAL_SECONDS, "shots": SHOTS})
     else:
         return jsonify({"status": "already_running"})
 
-@app.route('/ai/stop', methods=['POST'])
+@app.route('/ai/stop', methods=['GET', 'POST'])
 def ai_stop():
     stop_ai_thread()
     return jsonify({"status": "stopping"})
@@ -187,10 +186,27 @@ def ai_stop():
 def ai_history():
     return jsonify(read_history())
 
-@app.route('/ai/run_once', methods=['POST'])
+@app.route('/ai/run_once', methods=['GET', 'POST'])
 def ai_run_once():
-    record = ai_cycle_once()
-    return jsonify(record)
+    """Chạy thử một vòng đo năng lượng (hỗ trợ GET để test trên trình duyệt)."""
+    try:
+        n = int(request.args.get("qubits", 3))
+        shots = int(request.args.get("shots", SHOTS))
+        if n < 2 or n > 10:
+            return jsonify({"status": "error", "error": "Số qubit hợp lệ là từ 2 đến 10"}), 400
+        qc = make_entangle_circuit(n)
+        counts = run_quantum_circuit(qc, shots=shots)
+        record = {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "status": "ok",
+            "qubits": n,
+            "shots": shots,
+            "counts": counts
+        }
+        append_history(record)
+        return jsonify(record)
+    except Exception as e:
+        return jsonify({"status": "error", "error": str(e)})
 
 # ===============================================
 # 🚀 TỰ KHỞI ĐỘNG KHI DEPLOY
