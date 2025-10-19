@@ -1,2 +1,6 @@
 flask
-qiskit
+qiskit==1.1.1
+qiskit-aer==0.15.1
+numpy
+matplotlib
+pylatexenc
