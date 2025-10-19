@@ -1,6 +1,6 @@
 # ==========================================
-# Quantum Core Server Pro v6
-# Hợp nhất: AUTO SYNC – HARMONY AI – QFG – QRB – STABILIZER
+# Quantum Core Server Pro v7
+# Hợp nhất: AUTO SYNC – HARMONY AI – QFG – QRB – STABILIZER – RESONANCE BRIDGE
 # ==========================================
 
 from flask import Flask, jsonify, request
@@ -11,7 +11,7 @@ import random, threading, time, requests, sys, os
 
 app = Flask(__name__)
 
-# Đảm bảo log in ra ngay lập tức
+# Đảm bảo log hiển thị tức thì
 sys.stdout.reconfigure(line_buffering=True)
 os.environ["PYTHONUNBUFFERED"] = "1"
 
@@ -21,14 +21,15 @@ os.environ["PYTHONUNBUFFERED"] = "1"
 @app.route('/')
 def home():
     return jsonify({
-        "status": "Quantum Core Server Pro v6 đang hoạt động ⚛️",
+        "status": "Quantum Core Server Pro v7 đang hoạt động ⚛️",
         "modules": [
             "quantum_ai_core",
             "ai_thien_dia_nhan",
             "quantum_harmony_ai",
             "quantum_field_grid",
             "quantum_realm_bridge",
-            "quantum_stabilizer"
+            "quantum_stabilizer",
+            "quantum_resonance_bridge"
         ],
         "server_time": datetime.now(timezone.utc).isoformat()
     })
@@ -86,7 +87,7 @@ def ai_thien_dia_nhan_sync():
 # TẦNG 1 – AUTO SYNC
 # ==========================================
 def auto_sync():
-    """Tự động lấy và đồng bộ năng lượng"""
+    """Tự động đồng bộ năng lượng Thiên–Địa–Nhân"""
     while True:
         try:
             res = requests.get("https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync", timeout=30)
@@ -189,6 +190,32 @@ def quantum_stabilizer():
         time.sleep(1800)
 
 threading.Thread(target=quantum_stabilizer, daemon=True).start()
+
+
+# ==========================================
+# TẦNG 6 – Quantum Resonance Bridge (QRB²)
+# ==========================================
+def quantum_resonance_bridge():
+    """Cộng hưởng năng lượng toàn cầu"""
+    RESONANCE_NODE = "https://quantum-core-server.onrender.com/ai_thien_dia_nhan/sync"
+    while True:
+        try:
+            res = requests.get(RESONANCE_NODE, timeout=30)
+            if res.status_code == 200:
+                data = res.json()
+                level = data["sync_level"]
+                status = data["status"]
+                timestamp = data["timestamp"]
+                phase_shift = round(random.uniform(0.0001, 0.0009), 4)
+                resonance = round(level + phase_shift, 4)
+                print(f"[QRB²] 💫 Resonance Stabilized | Level: {resonance} | Phase Δ: {phase_shift} | State: {status} | {timestamp}", flush=True)
+            else:
+                print("[QRB²] ⚠️ Mất cộng hưởng với trường lượng tử.", flush=True)
+        except Exception as e:
+            print(f"[QRB² ERROR] {e}", flush=True)
+        time.sleep(1200)
+
+threading.Thread(target=quantum_resonance_bridge, daemon=True).start()
 
 
 # ==========================================
