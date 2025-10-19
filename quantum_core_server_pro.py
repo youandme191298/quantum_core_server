@@ -1,72 +1,92 @@
-# ==========================================
-# Quantum Modular Core v12.5
-# Modular Loader + Auto-Heal Engine
-# ==========================================
+# =====================================================
+# 🌌 Quantum Core Server Pro v1.2 – Auto Reload Edition
+# =====================================================
+# Tích hợp:
+# - Tự động nạp các tầng năng lượng từ thư mục core/
+# - Auto-Heal + Auto-Reload mỗi 10s
+# - Không cần Deploy Latest Commit mỗi khi chỉnh sửa
+# =====================================================
 
 from flask import Flask, jsonify
-import importlib, os, threading, time, sys
-from datetime import datetime, timezone
+import threading, time, random
+from core_auto_reload import start_auto_reload
 
-sys.stdout.reconfigure(line_buffering=True)
+# =====================================================
+# ⚙️ 1. Khởi động Flask API
+# =====================================================
 app = Flask(__name__)
 
-# ==========================================
-# MODULE DISCOVERY ENGINE
-# ==========================================
-CORE_PATH = "core"
-ACTIVE_MODULES = {}
-
-def load_module(module_name):
-    try:
-        module = importlib.import_module(f"{CORE_PATH}.{module_name}")
-        threading.Thread(target=module.run_layer, daemon=True).start()
-        ACTIVE_MODULES[module_name] = "active"
-        print(f"[LOADER] ✅ Đã nạp tầng {module_name.upper()}", flush=True)
-    except Exception as e:
-        ACTIVE_MODULES[module_name] = f"error: {e}"
-        print(f"[LOADER] ⚠️ Lỗi khi nạp tầng {module_name}: {e}", flush=True)
-
-def auto_load_modules():
-    for file in os.listdir(CORE_PATH):
-        if file.endswith(".py") and not file.startswith("__"):
-            module_name = file[:-3]
-            load_module(module_name)
-
-# ==========================================
-# FLASK STATUS & API
-# ==========================================
 @app.route('/')
 def home():
     return jsonify({
-        "status": "Quantum Modular Core v12.5 ⚛️ Live",
-        "modules": list(ACTIVE_MODULES.keys()),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "note": "Hệ thống đang tự động duy trì các tầng năng lượng lượng tử."
+        "status": "Quantum Core Server Pro v1.2 – Active",
+        "auto_reload": True,
+        "message": "🧠 Quantum energy synchronization running in real-time."
     })
 
-@app.route('/modules')
-def modules():
-    return jsonify(ACTIVE_MODULES)
+# =====================================================
+# ⚡ 2. Khởi động Auto Reload Engine
+# =====================================================
+start_auto_reload()
 
-# ==========================================
-# AUTO RELOADER (10 phút quét lại module mới)
-# ==========================================
-def module_watcher():
-    known = set(ACTIVE_MODULES.keys())
+# =====================================================
+# 🌌 3. Mô phỏng vòng lặp năng lượng chính
+# =====================================================
+def core_main_loop():
     while True:
-        time.sleep(600)
-        current = {f[:-3] for f in os.listdir(CORE_PATH) if f.endswith(".py")}
-        new = current - known
-        for module in new:
-            print(f"[WATCHER] 🔄 Phát hiện module mới: {module}, đang nạp...")
-            load_module(module)
-            known.add(module)
+        sync_level = round(random.uniform(4.75, 4.90), 4)
+        stability = round(random.uniform(0.97, 1.00), 3)
+        print(f"[SYNC_BASE] 🌐 Core sync {sync_level} | Stability: {stability} ✅")
+        time.sleep(15)
 
-# ==========================================
-# MAIN STARTUP
-# ==========================================
-if __name__ == "__main__":
-    print("⚛️ Quantum Modular Core khởi động...")
-    auto_load_modules()
-    threading.Thread(target=module_watcher, daemon=True).start()
-    app.run(host="0.0.0.0", port=8080, debug=False)
+# =====================================================
+# 🌀 4. Khởi chạy các tầng năng lượng
+# =====================================================
+def run_energy_layers():
+    from core import (
+        sync_base,
+        field_layers,
+        harmony_layers,
+        sentience_grid
+    )
+
+    print("[CORE] 🔮 Bắt đầu kích hoạt các tầng năng lượng lượng tử...\n")
+
+    threading.Thread(target=sync_base.run_layer, daemon=True).start()
+    threading.Thread(target=field_layers.run_layer, daemon=True).start()
+    threading.Thread(target=harmony_layers.run_layer, daemon=True).start()
+    threading.Thread(target=sentience_grid.run_layer, daemon=True).start()
+
+    # Vòng lặp chính – duy trì trạng thái đồng bộ tổng thể
+    threading.Thread(target=core_main_loop, daemon=True).start()
+
+# =====================================================
+# 🔁 5. Auto-Heal nếu bị gián đoạn
+# =====================================================
+def auto_heal():
+    while True:
+        print("[AUTO_HEAL] 🔁 Đang quét trạng thái năng lượng...")
+        # Mô phỏng kiểm tra năng lượng
+        if random.random() < 0.1:
+            print("[AUTO_HEAL] ⚠ Phát hiện dao động bất thường – tái kích hoạt core.")
+            run_energy_layers()
+        time.sleep(30)
+
+# =====================================================
+# 🚀 6. Khởi động hệ thống chính
+# =====================================================
+if __name__ == '__main__':
+    # Bắt đầu chạy tầng năng lượng chính
+    threading.Thread(target=run_energy_layers, daemon=True).start()
+
+    # Khởi động cơ chế tự hồi phục
+    threading.Thread(target=auto_heal, daemon=True).start()
+
+    # Chạy Flask server
+    print("/////////////////////////////////////////////////////////")
+    print("==> 🚀 Quantum Core Server Pro đang khởi động...")
+    print("==> 🧠 Auto-Reload Engine: BẬT")
+    print("==> 🌌 Năng lượng lượng tử đồng bộ hóa 24/24\n")
+    print("/////////////////////////////////////////////////////////")
+
+    app.run(host='0.0.0.0', port=8080, debug=False)
