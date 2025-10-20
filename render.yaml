@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: quantum-core
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python quantum_core_server_pro.py"
