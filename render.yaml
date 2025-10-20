@@ -3,5 +3,5 @@ services:
     name: quantum-core
     env: python
     plan: free
-    buildCommand: ""
+    buildCommand: "pip install -r requirements.txt"
     startCommand: "python quantum_core_server_pro.py"
