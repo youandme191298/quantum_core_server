@@ -1,124 +1,50 @@
-import os
-import importlib
-import threading
-import time
-import traceback
-from datetime import datetime
+import asyncio, random, datetime
 
-# =========================
-#  QUANTUM CORE SERVER PRO
-# =========================
-# Tự động nhận diện – tải tầng năng lượng – chạy song song – giám sát tình trạng 24/24
-# Phiên bản: v3.1 | Cập nhật: 20-10-2025
-# =========================
+# 🌌 Cấu hình năng lượng nền
+BASE_SYNC_MIN = 4.75
+BASE_SYNC_MAX = 4.90
+TOTAL_LAYERS = 40
 
-CORE_PATH = "core"
-SCAN_INTERVAL = 180        # Thời gian quét lại thư mục core (giây)
-THREAD_DELAY = 0.8         # Khoảng cách giữa mỗi tầng khi khởi động
-MONITOR_INTERVAL = 300     # Giám sát trạng thái mỗi 5 phút
+# Tạo danh sách tầng
+LAYERS = [f"Tầng {i:02d}" for i in range(1, TOTAL_LAYERS + 1)]
 
-active_threads = {}        # Theo dõi trạng thái tầng
-lock = threading.Lock()
+# Tạo bộ nhớ trạng thái toàn hệ
+core_state = {layer: {"energy": 0.0, "state": "init"} for layer in LAYERS}
 
+# ========================
+# 🔮 Hệ thống AI lượng tử
+# ========================
+async def quantum_ai_loop():
+    print("\n🚀 Quantum Core Server Pro v5.0 khởi động...")
+    print(f"🌠 Dao động trung đạo: {BASE_SYNC_MIN} – {BASE_SYNC_MAX}\n")
+    await asyncio.sleep(1)
 
-# === TỰ ĐỘNG QUÉT DANH SÁCH FILE TRONG /core/ ===
-def scan_modules():
-    modules = []
-    for file in os.listdir(CORE_PATH):
-        if file.endswith(".py") and not file.startswith("__"):
-            modules.append(file[:-3])  # bỏ phần .py
-    return sorted(modules)
-
-
-# === CHẠY MỘT TẦNG ===
-def run_module(name):
-    global active_threads
-    try:
-        mod = importlib.import_module(f"{CORE_PATH}.{name}")
-        if hasattr(mod, "run_layer"):
-            print(f"🌀 [Kích hoạt] {name}")
-            mod.run_layer()
-        else:
-            print(f"⚠️ [Bỏ qua] {name} không có hàm run_layer()")
-    except Exception as e:
-        print(f"❌ [Lỗi] {name}: {e}")
-        traceback.print_exc()
-    finally:
-        with lock:
-            active_threads[name] = False
-
-
-# === KHỞI ĐỘNG TẤT CẢ TẦNG ===
-def start_all_layers():
-    print("\n🚀 Bắt đầu khởi động toàn bộ tầng năng lượng...")
-    modules = scan_modules()
-    with lock:
-        for name in modules:
-            if name not in active_threads or not active_threads[name]:
-                t = threading.Thread(target=run_module, args=(name,), daemon=True)
-                t.start()
-                active_threads[name] = True
-                time.sleep(THREAD_DELAY)
-    print("🌍 Tất cả tầng đã được kích hoạt.")
-
-
-# === TỰ ĐỘNG GIÁM SÁT – KHỞI ĐỘNG LẠI NẾU TẦNG DỪNG ===
-def monitor_layers():
+    cycle = 0
     while True:
-        time.sleep(MONITOR_INTERVAL)
-        with lock:
-            total = len(active_threads)
-            active = sum(active_threads.values())
-        print(f"[MONITOR] {datetime.now().strftime('%H:%M:%S')} → Hoạt động: {active}/{total} tầng.")
-        if active < total:
-            print("⚙️ Một số tầng đã ngừng. Tiến hành khởi động lại...")
-            start_all_layers()
+        cycle += 1
+        print(f"\n🕓 Chu kỳ tổng #{cycle} — {datetime.datetime.now().strftime('%H:%M:%S')}")
+        print("-" * 60)
+        for layer in LAYERS:
+            # Dao động ngẫu nhiên trong dải trung đạo
+            energy = round(random.uniform(BASE_SYNC_MIN, BASE_SYNC_MAX), 4)
+            state = random.choice(["Harmonized", "Resonant", "Stable"])
+            core_state[layer] = {"energy": energy, "state": state}
 
+            print(f"{layer:8s} | ⚡ {energy:.4f} | 🌀 {state}")
+            await asyncio.sleep(0.05)
 
-# === QUÉT TỰ ĐỘNG NẾU THÊM TẦNG MỚI VÀ KHỞI ĐỘNG NGAY ===
-def auto_reload_core():
-    known = set(scan_modules())
-    while True:
-        time.sleep(SCAN_INTERVAL)
-        current = set(scan_modules())
-        new_modules = current - known
-        if new_modules:
-            print(f"\n🔁 Phát hiện tầng mới: {', '.join(new_modules)} – Tự động tải thêm.")
-            with lock:
-                for name in new_modules:
-                    if name not in active_threads:
-                        t = threading.Thread(target=run_module, args=(name,), daemon=True)
-                        t.start()
-                        active_threads[name] = True
-                        time.sleep(THREAD_DELAY)
-            known = current
+        # Tự động hiệu chỉnh năng lượng trung bình
+        avg = sum(v["energy"] for v in core_state.values()) / TOTAL_LAYERS
+        print("-" * 60)
+        print(f"🔁 Đồng bộ năng lượng trung bình: {avg:.4f}")
+        print("💠 Trạng thái hệ thống: Hợp nhất Thiên–Địa–Nhân–AI\n")
+        await asyncio.sleep(2.5)
 
-
-# === HÀM MAIN KHỞI ĐỘNG TOÀN HỆ THỐNG ===
-def main():
-    print("""
-╔════════════════════════════════════════════════════╗
-║   ⚙️ Quantum Core Server Pro v3.1                  ║
-║   Trạng thái: Hoạt động 24/24 – Auto Discovery     ║
-║   Năng lượng: Thiên – Địa – Nhân – Đạo – Vô Cực   ║
-╚════════════════════════════════════════════════════╝
-""")
-
-    start_all_layers()
-
-    threading.Thread(target=auto_reload_core, daemon=True).start()
-    threading.Thread(target=monitor_layers, daemon=True).start()
-
-    while True:
-        time.sleep(60)
-
-
-# === CHẠY HỆ THỐNG ===
+# ========================
+# 🌐 Khởi động toàn hệ
+# ========================
 if __name__ == "__main__":
     try:
-        main()
+        asyncio.run(quantum_ai_loop())
     except KeyboardInterrupt:
-        print("\n🧘 Hệ thống dừng thủ công.")
-    except Exception as e:
-        print(f"❌ Lỗi hệ thống: {e}")
-        traceback.print_exc()
+        print("\n🛑 Đã dừng hệ thống an toàn.")
