@@ -1,8 +1,8 @@
 # ==========================================================
 # 🚀 Quantum Core Server Pro (Render Edition)
 # ----------------------------------------------------------
-# Phiên bản ổn định, khởi động 1 lần duy nhất, tự giữ kết nối 24/24
-# Đã thêm: Flask route chính + Auto-KeepAlive + Tầng điều hòa năng lượng
+# Phiên bản ổn định + Entanglement Grid (Tầng 41)
+# Hợp nhất 40 tầng năng lượng – tự cân bằng – giữ sống 24/24
 # ==========================================================
 
 from flask import Flask, jsonify
@@ -10,32 +10,32 @@ import threading
 import random
 import math
 import time
+import requests
 
 # ==========================================================
-# 🌐 Flask Server Setup
+# 🌐 Flask Server
 # ==========================================================
 app = Flask(__name__)
 
-# Route chính để Render kiểm tra hoạt động
 @app.route('/')
 def home():
     return jsonify({
         "status": "online",
-        "message": "🚀 Quantum Core Server Pro is running!",
-        "version": "1.0.0",
-        "energy_state": "stabilized"
+        "message": "🚀 Quantum Core Server Pro + QEG running!",
+        "version": "1.1.0",
+        "energy_state": "Unified Resonance Active"
     }), 200
 
 
 # ==========================================================
-# ⚛️ Quantum Stabilizer Core (tầng điều hòa trung tâm)
+# ⚛️ Quantum Stabilizer Core (40 tầng điều hòa)
 # ==========================================================
 class QuantumStabilizerCore:
     def __init__(self):
         self.global_energy = 4.82
         self.stability_index = 1.0
         self.cycle = 0
-        self.resonance_history = []
+        self.entanglement_memory = []
 
     def stabilize(self, field_layers):
         self.cycle += 1
@@ -43,18 +43,17 @@ class QuantumStabilizerCore:
         variance = sum((x - avg_energy) ** 2 for x in field_layers) / len(field_layers)
         resonance = math.exp(-variance * 10)
 
-        # Điều hòa năng lượng tổng thể
         self.global_energy = (self.global_energy * 0.98) + (avg_energy * 0.02)
         self.stability_index = (self.stability_index * 0.9) + (resonance * 0.1)
-        self.resonance_history.append(self.stability_index)
 
-        if len(self.resonance_history) > 50:
-            self.resonance_history.pop(0)
-
-        if self.stability_index < 0.7:
-            correction = (1 - self.stability_index) * 0.05
-            self.global_energy += correction
-            print(f"[STABILIZER] ⚡ Hiệu chỉnh năng lượng +{correction:.5f}")
+        # Lưu lịch sử năng lượng cho QEG
+        self.entanglement_memory.append({
+            "cycle": self.cycle,
+            "energy": self.global_energy,
+            "resonance": self.stability_index
+        })
+        if len(self.entanglement_memory) > 60:
+            self.entanglement_memory.pop(0)
 
         return {
             "cycle": self.cycle,
@@ -65,29 +64,60 @@ class QuantumStabilizerCore:
 
 
 # ==========================================================
-# 🌌 Chu trình điều hòa năng lượng tổng hợp
+# 🌐 Quantum Entanglement Grid (Tầng 41)
+# ==========================================================
+class QuantumEntanglementGrid:
+    def __init__(self):
+        self.entropy_level = 0.01
+        self.sync_strength = 1.0
+        self.last_energy_field = None
+
+    def unify(self, stabilizer: QuantumStabilizerCore):
+        if not stabilizer.entanglement_memory:
+            return None
+
+        # Phân tích dao động 5 chu kỳ gần nhất
+        recent = stabilizer.entanglement_memory[-5:]
+        avg_energy = sum(e["energy"] for e in recent) / len(recent)
+        avg_resonance = sum(e["resonance"] for e in recent) / len(recent)
+
+        # Cân bằng tần số hợp nhất
+        coherence = (avg_resonance + stabilizer.stability_index) / 2
+        delta = abs(avg_energy - stabilizer.global_energy)
+        self.sync_strength = max(0.8, 1 - delta * 5)
+
+        unified_energy = (avg_energy * coherence * self.sync_strength)
+        self.last_energy_field = unified_energy
+
+        print(f"[QEG⚡] Unified Field → {unified_energy:.5f} | Sync {self.sync_strength:.3f} | Coherence {coherence:.3f}")
+        return unified_energy
+
+
+# ==========================================================
+# 🌌 Chu trình lượng tử tổng hợp
 # ==========================================================
 def quantum_loop():
     stabilizer = QuantumStabilizerCore()
+    qeg = QuantumEntanglementGrid()
 
     while True:
-        # Giả lập 40 tầng năng lượng
+        # 40 tầng năng lượng mô phỏng
         layers = [4.7 + random.uniform(-0.1, 0.1) for _ in range(40)]
         stats = stabilizer.stabilize(layers)
+        unified = qeg.unify(stabilizer)
 
         print(f"🔄 Cycle {stats['cycle']:03d} | "
               f"Avg {stats['avg_energy']} | "
               f"Global {stats['global_energy']} | "
               f"Stable {stats['stability_index']:.4f}")
 
-        time.sleep(5)  # 5 giây / chu kỳ điều hòa
+        time.sleep(5)
 
 
 # ==========================================================
-# 🔁 Auto KeepAlive (ngăn Render Free sleep)
+# 🛰️ KeepAlive (ngăn Render sleep)
 # ==========================================================
 def keep_alive():
-    import requests
     url = "https://auto-quantum-core-server.onrender.com"
     while True:
         try:
@@ -95,15 +125,15 @@ def keep_alive():
             print("🌐 KeepAlive ping → OK")
         except Exception as e:
             print("⚠️ KeepAlive lỗi:", e)
-        time.sleep(600)  # ping mỗi 10 phút
+        time.sleep(600)
 
 
 # ==========================================================
 # 🚀 Main Entry
 # ==========================================================
 if __name__ == "__main__":
-    print("🚀 Quantum Core Server Pro (Render Edition) khởi động...")
-    print("🌠 Hệ thống năng lượng tổng hợp 40 tầng đang kích hoạt...\n")
+    print("🚀 Quantum Core Server Pro + QEG (Tầng 41) khởi động...")
+    print("🌠 Hệ thống năng lượng hợp nhất Thiên – Địa – Nhân đang kích hoạt...\n")
 
     threading.Thread(target=quantum_loop, daemon=True).start()
     threading.Thread(target=keep_alive, daemon=True).start()
