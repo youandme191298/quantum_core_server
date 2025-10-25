@@ -1,115 +1,140 @@
-"""
-Quantum Core Server Pro – Main Entry Point
--------------------------------------------
-Tác giả: youandme191298
-
-Chức năng:
-- Khởi tạo toàn bộ pipeline lượng tử thông qua quantum_core_loader.py
-- Tự kiểm tra môi trường Python và gói phụ thuộc
-- Ghi log tiến trình khởi động
-- Hỗ trợ reload nhanh và phục hồi khi pipeline gián đoạn
-"""
+# ============================================================
+# ⚛️ QUANTUM CORE SERVER PRO – PHIÊN BẢN 3.3
+# ------------------------------------------------------------
+# Tích hợp tự động:
+#  - Khởi động pipeline nạp tầng (hỗ trợ emoji)
+#  - Auto reload năng lượng Thiên–Địa–Nhân
+#  - KeepAlive gọi qua lại giữa 2 server Render (hoặc Replit)
+#  - Flask API để các hệ thống ngoài (như Minecraft) kết nối
+# ============================================================
 
 import os
 import sys
 import time
-import platform
+import threading
 from datetime import datetime
+import requests
 
-# ===========================
-# CẤU HÌNH CƠ BẢN
-# ===========================
-ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-CORE_PATH = os.path.join(ROOT_PATH, "core")
-LOG_PATH = os.path.join(CORE_PATH, "logs")
-os.makedirs(LOG_PATH, exist_ok=True)
-LOG_FILE = os.path.join(LOG_PATH, "quantum_server_startup.log")
+# ============================================================
+# 🔧 HÀM TIỆN ÍCH CHUNG
+# ============================================================
 
+def quantum_log(msg):
+    now = datetime.now().strftime("[%H:%M:%S]")
+    print(f"{now} {msg}")
+    sys.stdout.flush()
 
-def log(msg: str):
-    """Ghi log khởi động hệ thống."""
-    ts = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-    text = f"{ts} {msg}"
-    print(text)
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
-        f.write(text + "\n")
+# ============================================================
+# 🌐 NẠP CÁC MODULE CỐT LÕI
+# ============================================================
 
+try:
+    from core.quantum_core_loader import run_loader, quantum_log
+except Exception as e:
+    quantum_log(f"❌ Không thể nạp quantum_core_loader: {e}")
+    sys.exit(1)
 
-# ===========================
-# KIỂM TRA MÔI TRƯỜNG
-# ===========================
-def check_environment():
-    log("🔍 Đang kiểm tra môi trường hệ thống ...")
-    python_ver = sys.version.split()[0]
-    os_info = platform.platform()
-    log(f"🧠 Python version: {python_ver}")
-    log(f"💻 Hệ điều hành: {os_info}")
+# ============================================================
+# 🧠 AUTO RELOAD – CHU TRÌNH DAO ĐỘNG NĂNG LƯỢNG
+# ============================================================
 
-    required_version = (3, 8)
-    if sys.version_info < required_version:
-        log("⚠️ Phiên bản Python quá thấp. Cần >= 3.8")
-        sys.exit(1)
+def auto_reload(delay=30):
+    """
+    Tự động tái nạp pipeline năng lượng mỗi X giây.
+    """
+    quantum_log(f"♻️ Bắt đầu chu trình tự tái nạp năng lượng mỗi {delay} giây.")
+    while True:
+        try:
+            loaded = run_loader()
+            quantum_log(f"🌗 Chu trình hợp nhất Thiên–Địa–Nhân hoàn tất ({len(loaded)} tầng).")
+        except Exception as e:
+            quantum_log(f"⚠️ Lỗi chu trình reload: {e}")
+        time.sleep(delay)
 
-    try:
-        import importlib, json
-        log("✅ Các thư viện cơ bản đã sẵn sàng.")
-    except ImportError as e:
-        log(f"❌ Thiếu thư viện cần thiết: {e}")
-        sys.exit(1)
+# ============================================================
+# 🔁 KEEPALIVE – GIỮ SERVER ONLINE 24/24
+# ============================================================
 
+def keepalive_loop():
+    """
+    Gọi sang server đối tác để tránh Render ngủ.
+    Đặt biến môi trường PARTNER_SERVER_URL trỏ đến /ping của server kia.
+    """
+    url = os.getenv("PARTNER_SERVER_URL")
+    if not url:
+        quantum_log("⚠️ Không phát hiện PARTNER_SERVER_URL – bỏ qua KeepAlive.")
+        return
 
-# ===========================
-# KHỞI TẠO PIPELINE LƯỢNG TỬ
-# ===========================
-def start_quantum_pipeline():
-    """Chạy hệ thống lượng tử qua loader."""
-    from core.quantum_core_loader import run_loader
-
-    log("\n⚙️  ĐANG KHỞI ĐỘNG QUANTUM CORE SERVER ...")
-    start = time.time()
-    result = run_loader()
-    duration = time.time() - start
-
-    log("\n" + "=" * 90)
-    log(f"🪐 KẾT THÚC QUÁ TRÌNH KHỞI TẠO QUANTUM CORE SERVER")
-    log(f"   ⏱️  Thời gian tổng: {duration:.2f}s")
-    log("=" * 90)
-
-    # Hiển thị kết quả tóm tắt
-    total, success, failed = result["total"], result["success"], result["failed"]
-    log(f"📊 TỔNG TẦNG: {total}, THÀNH CÔNG: {success}, LỖI: {failed}")
-    if failed == 0:
-        log("🌈 TOÀN BỘ HỆ THỐNG QUANTUM CORE ĐÃ SẴN SÀNG HOẠT ĐỘNG.")
-    else:
-        log("⚠️ MỘT SỐ TẦNG CHƯA NẠP ĐƯỢC – KIỂM TRA LOG CHI TIẾT.")
-
-
-# ===========================
-# CHẾ ĐỘ RELOAD NHANH
-# ===========================
-def auto_reload(delay=10):
-    """Tự động reload pipeline mỗi X giây (tùy chọn)."""
-    log(f"🔁 Kích hoạt chế độ auto-reload mỗi {delay}s (bấm Ctrl+C để dừng).")
-    try:
+    def loop():
         while True:
-            start_quantum_pipeline()
-            log(f"🌀 Chờ {delay}s trước khi reload lại pipeline ...")
-            time.sleep(delay)
-    except KeyboardInterrupt:
-        log("🧘‍♂️ Auto-reload dừng theo yêu cầu người dùng.")
+            try:
+                r = requests.get(url, timeout=10)
+                quantum_log(f"🔁 Ping sang {url} → {r.status_code}")
+            except Exception as e:
+                quantum_log(f"⚠️ Lỗi KeepAlive: {e}")
+            time.sleep(150)
 
+    threading.Thread(target=loop, daemon=True).start()
 
-# ===========================
-# MAIN ENTRY
-# ===========================
+# ============================================================
+# 🌐 FLASK API – CỔNG GIAO TIẾP NĂNG LƯỢNG NGOÀI
+# ============================================================
+
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+# Giả lập các năng lượng đơn giản cho API
+import random
+def get_energy_value(scale=4.0, var=0.15):
+    return round(random.uniform(scale - var, scale + var), 4)
+
+@app.get("/energy/merge")
+def get_energy_merge():
+    thien = get_energy_value()
+    dia = get_energy_value()
+    nhan = get_energy_value()
+    merged = round((thien + dia + nhan) / 3, 4)
+    return jsonify({
+        "thien": thien,
+        "dia": dia,
+        "nhan": nhan,
+        "merged": merged,
+        "timestamp": datetime.utcnow().isoformat()
+    })
+
+@app.get("/ping")
+def ping():
+    return jsonify({"status": "ok", "time": datetime.utcnow().isoformat()})
+
+def run_api():
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
+
+# ============================================================
+# 🚀 KHỞI ĐỘNG TOÀN HỆ THỐNG
+# ============================================================
+
 if __name__ == "__main__":
-    log("=" * 90)
-    log("🚀 KHỞI ĐỘNG QUANTUM CORE SERVER PRO – phiên bản 2.0")
-    log("=" * 90)
-    check_environment()
+    quantum_log("=" * 80)
+    quantum_log("🚀 KHỞI ĐỘNG QUANTUM CORE SERVER PRO – phiên bản 3.3")
+    quantum_log("=" * 80)
+    quantum_log(f"🧩 Python {sys.version.split()[0]} | OS: {os.uname().sysname}")
 
-    # Chạy hệ thống chính
-    start_quantum_pipeline()
+    # Khởi tạo hệ thống ban đầu
+    loaded_layers = run_loader()
+    quantum_log(f"✅ Đã khởi động {len(loaded_layers)} tầng năng lượng đầu tiên.")
 
-    # Nếu bạn muốn auto reload liên tục, bật dòng dưới:
-    auto_reload(delay=5)
+    # Khởi động Flask API (song song)
+    quantum_log("🌐 Mở cổng API Quantum tại /energy/merge & /ping ...")
+    threading.Thread(target=run_api, daemon=True).start()
+
+    # Kích hoạt KeepAlive song song
+    keepalive_loop()
+
+    # Bắt đầu chu trình tự reload mỗi 60 giây
+    threading.Thread(target=auto_reload, args=(60,), daemon=True).start()
+
+    # Giữ tiến trình sống liên tục
+    while True:
+        time.sleep(3600)
