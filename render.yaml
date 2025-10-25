@@ -1,7 +1,7 @@
 services:
   - type: web
-    name: quantum-core
+    name: quantum-core-server
     env: python
-    plan: free
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python quantum_core_server_pro.py"
+    autoDeploy: true
