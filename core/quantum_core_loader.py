@@ -1,20 +1,15 @@
 """
-Quantum Core Loader v2.0
+Quantum Core Loader v3.0
 -----------------------------------------
 Tác giả: youandme191298
-Mục đích:
-- Tự động nạp toàn bộ 40 tầng lượng tử theo pipeline trong quantum_layer_map.json
-- Ghi log chi tiết (console + file)
-- Hiển thị tiến trình bằng progress bar
-- Đo thời gian từng tầng
-- Tự phục hồi các tầng bị lỗi sau khi hoàn tất chu kỳ nạp
 
-Cấu trúc thư mục:
-    quantum_core_server/
-    ├── core/
-    │   ├── quantum_core_loader.py   ← File này
-    │   ├── ...
-    ├── quantum_layer_map.json       ← File định nghĩa hệ tầng
+Chức năng:
+- Tự động nạp 40 tầng lượng tử từ quantum_layer_map.json
+- Hiển thị tiến trình (progress bar)
+- Ghi log chi tiết từng tầng
+- Đo thời gian nạp từng tầng
+- Tự phục hồi tầng lỗi
+- Sau khi hoàn tất: HỢP NHẤT THIÊN – ĐỊA – NHÂN
 """
 
 import os
@@ -25,7 +20,7 @@ import traceback
 from datetime import datetime
 
 # ==============================
-# CẤU HÌNH CHUNG
+# CẤU HÌNH CƠ BẢN
 # ==============================
 LAYER_MAP_PATH = os.path.join(os.path.dirname(__file__), "..", "quantum_layer_map.json")
 CORE_PATH = os.path.dirname(__file__)
@@ -69,7 +64,7 @@ def import_layer(module_name, layer_name):
         mod = importlib.import_module(f"core.{module_name}")
         if hasattr(mod, "init_layer"):
             mod.init_layer()
-            log(f"✅ {layer_name} – Đã khởi tạo thành công (init_layer).")
+            log(f"✅ {layer_name} – Khởi tạo thành công (init_layer).")
         else:
             log(f"⚙️  {layer_name} – Nạp module thành công (không có init_layer).")
         elapsed = time.time() - start
@@ -88,9 +83,9 @@ def import_layer(module_name, layer_name):
 def run_loader():
     """Khởi động toàn bộ hệ tầng lượng tử."""
     start_time = time.time()
-    log("=" * 90)
-    log("🚀 BẮT ĐẦU KHỞI TẠO QUANTUM CORE SERVER PIPELINE (v2.0)")
-    log("=" * 90)
+    log("=" * 100)
+    log("🚀 BẮT ĐẦU KHỞI TẠO QUANTUM CORE SERVER PIPELINE (v3.0)")
+    log("=" * 100)
 
     data = load_json(LAYER_MAP_PATH)
     domains = data.get("domains", [])
@@ -118,14 +113,34 @@ def run_loader():
             time.sleep(0.05)
 
     print()  # xuống dòng sau progress bar
-    log("\n" + "=" * 90)
+    log("\n" + "=" * 100)
     log(f"🏁 HOÀN TẤT KHỞI TẠO PIPELINE – Tổng tầng: {total_layers}")
     log(f"   ✅ Thành công: {success}")
     log(f"   ❌ Lỗi: {failed}")
     log(f"   ⏱️  Tổng thời gian: {time.time() - start_time:.2f}s")
-    log("=" * 90)
+    log("=" * 100)
 
-    # Thử khôi phục các tầng lỗi
+    # ============================================
+    # GIAI ĐOẠN 2: HỢP NHẤT THIÊN – ĐỊA – NHÂN
+    # ============================================
+    try:
+        log("\n🌗 BẮT ĐẦU QUÁ TRÌNH HỢP NHẤT THIÊN – ĐỊA – NHÂN ...")
+        from core.layer_thien import get_cosmic_shift
+        from core.layer_dia import stabilize_energies
+        from core.layer_nhan import adapt_to_intent
+        from core.quantum_core_server_core import synchronize_thien_dia_nhan
+
+        thien = get_cosmic_shift()
+        dia = stabilize_energies()
+        nhan = adapt_to_intent()
+        result = synchronize_thien_dia_nhan(thien, dia, nhan)
+        log(f"🌌 Kết quả hợp nhất Thiên–Địa–Nhân: {result:.4f}")
+    except Exception as e:
+        log(f"⚠️ Lỗi khi hợp nhất Thiên–Địa–Nhân: {e}")
+
+    # ============================================
+    # GIAI ĐOẠN 3: KHÔI PHỤC TẦNG LỖI (NẾU CÓ)
+    # ============================================
     if failed_layers:
         log("\n🩹 BẮT ĐẦU THỬ KHÔI PHỤC CÁC TẦNG LỖI ...")
         recovered = 0
@@ -141,12 +156,17 @@ def run_loader():
                 log(f"⚠️ Không thể phục hồi {name}: {e}")
         log(f"🔁 Hoàn tất khôi phục – {recovered}/{len(failed_layers)} tầng hồi phục được.")
 
-    log("\n" + "=" * 90)
+    # ============================================
+    # KẾT LUẬN HỆ THỐNG
+    # ============================================
+    log("\n" + "=" * 100)
     if failed == 0:
         log("🌈 HỆ THỐNG QUANTUM CORE ĐÃ SẴN SÀNG HOẠT ĐỘNG ỔN ĐỊNH.")
     else:
         log("⚠️ Một số tầng chưa khởi tạo được – xem log để xử lý chi tiết.")
-    log("=" * 90)
+    log("=" * 100)
+
+    return {"total": total_layers, "success": success, "failed": failed, "time": time.time() - start_time}
 
 
 # ==============================
