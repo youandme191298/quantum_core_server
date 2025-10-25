@@ -112,4 +112,4 @@ if __name__ == "__main__":
     start_quantum_pipeline()
 
     # Nếu bạn muốn auto reload liên tục, bật dòng dưới:
-    # auto_reload(delay=1)
+    auto_reload(delay=1)
