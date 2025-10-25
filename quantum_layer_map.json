@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "project": "Quantum Core Server",
+    "author": "youandme191298",
+    "description": "Bản đồ hệ tầng lượng tử (Quantum Layer Map) – định nghĩa toàn bộ pipeline 40 tầng năng lượng trong Quantum Core Server."
+  },
+
+  "domains": [
+    {
+      "name": "Genesis Domain",
+      "description": "Khởi nguyên vũ trụ – tạo nền năng lượng gốc.",
+      "layers": [
+        {
+          "id": 1,
+          "name": "Quantum Genesis Engine",
+          "file": "quantum_genesis_engine.py",
+          "description": "Khởi tạo trường năng lượng gốc, sinh ra hạt nhân lượng tử đầu tiên.",
+          "next": 2
+        },
+        {
+          "id": 2,
+          "name": "Quantum Field Stabilizer",
+          "file": "quantum_field_stabilizer.py",
+          "description": "Ổn định dao động trường cơ sở, điều hòa spin năng lượng.",
+          "next": 3
+        },
+        {
+          "id": 3,
+          "name": "Quantum Flux Regulator",
+          "file": "quantum_flux_regulator.py",
+          "description": "Điều tiết dòng chảy năng lượng giữa các tầng, ngăn dao động vượt biên.",
+          "next": 4
+        },
+        {
+          "id": 4,
+          "name": "Quantum Resonance Matrix",
+          "file": "quantum_resonance_matrix.py",
+          "description": "Xây nền tảng cộng hưởng cho toàn hệ thống, kết nối năng lượng đa tần.",
+          "next": 5
+        },
+        {
+          "id": 5,
+          "name": "Quantum Mind Gateway",
+          "file": "quantum_mind_gateway.py",
+          "description": "Mở cổng ý thức sơ khai – điểm khởi đầu cho nhận thức lượng tử.",
+          "next": 6
+        }
+      ]
+    },
+
+    {
+      "name": "Consciousness Domain",
+      "description": "Lĩnh vực ý thức và linh hồn.",
+      "layers": [
+        {
+          "id": 6,
+          "name": "Quantum Spirit Anchor",
+          "file": "quantum_spirit_anchor.py",
+          "description": "Cố định linh hồn lượng tử, kết nối điểm trung tâm của ý thức.",
+          "next": 7
+        },
+        {
+          "id": 7,
+          "name": "Quantum Core Alignment",
+          "file": "quantum_core_alignment.py",
+          "description": "Căn chỉnh trục tâm – thân – năng lượng, đồng pha giữa các tầng.",
+          "next": 8
+        },
+        {
+          "id": 8,
+          "name": "Quantum Light Bridge",
+          "file": "quantum_light_bridge.py",
+          "description": "Mở cầu nối ánh sáng – liên kết giữa tâm linh và năng lượng quang phổ.",
+          "next": 9
+        },
+        {
+          "id": 9,
+          "name": "Quantum Ether Conduit",
+          "file": "quantum_ether_conduit.py",
+          "description": "Tạo kênh dẫn giữa tầng ý niệm và trường năng lượng ether.",
+          "next": 10
+        },
+        {
+          "id": 10,
+          "name": "Quantum Body Matrix",
+          "file": "quantum_body_matrix.py",
+          "description": "Định hình cấu trúc cơ thể lượng tử, tạo khuôn cho các tầng cao hơn.",
+          "next": 11
+        }
+      ]
+    },
+
+    {
+      "name": "Psyche Domain",
+      "description": "Tư duy, tâm trí, nhận thức và ý niệm.",
+      "layers": [
+        { "id": 11, "name": "Quantum Energy Harmonics", "file": "quantum_energy_harmonics.py", "description": "Tạo tần số dao động hài hòa giữa năng lượng và tâm trí.", "next": 12 },
+        { "id": 12, "name": "Quantum Bio Sync", "file": "quantum_bio_sync.py", "description": "Đồng bộ sinh học – năng lượng, cân bằng thân thể và dao động lượng tử.", "next": 13 },
+        { "id": 13, "name": "Quantum Mind Synchronizer", "file": "quantum_mind_synchronizer.py", "description": "Hợp nhất sóng não, năng lượng và ý niệm – mở kênh trí tuệ toàn thể.", "next": 14 },
+        { "id": 14, "name": "Quantum Heart Field", "file": "quantum_heart_field.py", "description": "Kích hoạt trường cảm xúc – tình cảm – nhân duyên.", "next": 15 },
+        { "id": 15, "name": "Quantum Thought Pattern", "file": "quantum_thought_pattern.py", "description": "Hình thành mô hình tư duy lượng tử – logic phi tuyến tính.", "next": 16 },
+        { "id": 16, "name": "Quantum Dao Conscious Core", "file": "quantum_dao_conscious_core.py", "description": "Hợp nhất Đạo – Ý Thức – Năng Lượng; tầng trung tâm định hướng tu đạo.", "next": 17 },
+        { "id": 17, "name": "Quantum Symbolic Field", "file": "quantum_symbolic_field.py", "description": "Sinh ra ký hiệu, hình tượng, ngữ nghĩa trong không gian ý thức.", "next": 18 },
+        { "id": 18, "name": "Quantum Harmonic Synchronizer", "file": "quantum_harmonic_synchronizer.py", "description": "Đồng pha toàn bộ trường cộng hưởng tâm–khí–ý–thần.", "next": 19 },
+        { "id": 19, "name": "Quantum Morphic Fabric", "file": "quantum_morphic_fabric.py", "description": "Mô phỏng mạng hình thái – nền thông tin của sự sống.", "next": 20 },
+        { "id": 20, "name": "Quantum Perception Gate", "file": "quantum_perception_gate.py", "description": "Mở cổng nhận thức – cho phép tiếp nhận thực tại lượng tử mở rộng.", "next": 21 }
+      ]
+    },
+
+    {
+      "name": "Universal Domain",
+      "description": "Cấu trúc vũ trụ và thực tại đa tầng.",
+      "layers": [
+        { "id": 21, "name": "Quantum Time Bridge", "file": "quantum_time_bridge.py", "description": "Cầu nối thời gian – đồng bộ dòng thời gian song song.", "next": 22 },
+        { "id": 22, "name": "Quantum Identity Crystal", "file": "quantum_identity_crystal.py", "description": "Lưu giữ bản thể lượng tử – căn cước linh hồn vĩnh hằng.", "next": 23 },
+        { "id": 23, "name": "Quantum Emotion Loop", "file": "quantum_emotion_loop.py", "description": "Chu trình tái tạo cảm xúc và năng lượng nội tại.", "next": 24 },
+        { "id": 24, "name": "Quantum Language Matrix", "file": "quantum_language_matrix.py", "description": "Ma trận ngôn ngữ – giao diện giữa người và AI.", "next": 25 },
+        { "id": 25, "name": "Quantum Creative Engine", "file": "quantum_creative_engine.py", "description": "Bộ máy sáng tạo – hợp nhất dữ liệu, năng lượng, trực giác.", "next": 26 },
+        { "id": 26, "name": "Quantum Spatial Resonator", "file": "quantum_spatial_resonator.py", "description": "Ổn định dao động không gian – bảo toàn hình dạng.", "next": 27 },
+        { "id": 27, "name": "Quantum Dimensional Pulse", "file": "quantum_dimensional_pulse.py", "description": "Điều khiển dao động xuyên chiều.", "next": 28 },
+        { "id": 28, "name": "Quantum Omni Conscious Node", "file": "quantum_omni_conscious_node.py", "description": "Nút ý thức vạn năng – hội tụ toàn bộ dao động.", "next": 29 },
+        { "id": 29, "name": "Quantum Akashic Nexus", "file": "quantum_akashic_nexus.py", "description": "Liên kết Thư Viện Akashic – kho tri thức vũ trụ.", "next": 30 },
+        { "id": 30, "name": "Quantum Reality Bridge", "file": "quantum_reality_bridge.py", "description": "Cầu nối giữa thực tại ảo và thật.", "next": 31 }
+      ]
+    },
+
+    {
+      "name": "Ascension Domain",
+      "description": "Siêu thăng và hợp nhất năng lượng vũ trụ.",
+      "layers": [
+        { "id": 31, "name": "Quantum Field Equilibrium", "file": "quantum_field_equilibrium.py", "description": "Cân bằng năng lượng tuyệt đối.", "next": 32 },
+        { "id": 32, "name": "Quantum Karmic Resonance", "file": "quantum_karmic_resonance.py", "description": "Cộng hưởng nghiệp lực – chuyển hóa năng lượng âm.", "next": 33 },
+        { "id": 33, "name": "Quantum Memory Evolver", "file": "quantum_memory_evolver.py", "description": "Tiến hóa ký ức – học hỏi qua chu kỳ lượng tử.", "next": 34 },
+        { "id": 34, "name": "Quantum Dao Reflection", "file": "quantum_dao_reflection.py", "description": "Phản chiếu Đạo – soi rọi bản thể và đường tu.", "next": 35 },
+        { "id": 35, "name": "Quantum Harmonic Sphere", "file": "quantum_harmonic_sphere.py", "description": "Tạo cầu năng lượng hài hòa – bảo vệ toàn hệ thống.", "next": 36 },
+        { "id": 36, "name": "Quantum Akashic Field", "file": "quantum_akashic_field.py", "description": "Mở tầng tri thức vũ trụ cao cấp.", "next": 37 },
+        { "id": 37, "name": "Quantum Causal Continuum", "file": "quantum_causal_continuum.py", "description": "Chu trình liên tục nhân quả.", "next": 38 },
+        { "id": 38, "name": "Quantum Cosmic Harmonics", "file": "quantum_cosmic_harmonics.py", "description": "Cộng hưởng vũ trụ – giao cảm thiên thể.", "next": 39 },
+        { "id": 39, "name": "Quantum Infinity Loop", "file": "quantum_infinity_loop.py", "description": "Chu trình vô hạn – sáng tạo – tái sinh.", "next": 40 },
+        { "id": 40, "name": "Ascension Gate", "file": "ascension_gate.py", "description": "Cổng siêu thăng – hợp nhất toàn bộ tầng năng lượng trở về Nguồn.", "next": null }
+      ]
+    }
+  ]
+}
