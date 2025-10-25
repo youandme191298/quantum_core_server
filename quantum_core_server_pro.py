@@ -1,141 +1,115 @@
-# ==========================================================
-# 🚀 Quantum Core Server Pro (Render Edition)
-# ----------------------------------------------------------
-# Phiên bản ổn định + Entanglement Grid (Tầng 41)
-# Hợp nhất 40 tầng năng lượng – tự cân bằng – giữ sống 24/24
-# ==========================================================
+"""
+Quantum Core Server Pro – Main Entry Point
+-------------------------------------------
+Tác giả: youandme191298
 
-from flask import Flask, jsonify
-import threading
-import random
-import math
+Chức năng:
+- Khởi tạo toàn bộ pipeline lượng tử thông qua quantum_core_loader.py
+- Tự kiểm tra môi trường Python và gói phụ thuộc
+- Ghi log tiến trình khởi động
+- Hỗ trợ reload nhanh và phục hồi khi pipeline gián đoạn
+"""
+
+import os
+import sys
 import time
-import requests
+import platform
+from datetime import datetime
 
-# ==========================================================
-# 🌐 Flask Server
-# ==========================================================
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return jsonify({
-        "status": "online",
-        "message": "🚀 Quantum Core Server Pro + QEG running!",
-        "version": "1.1.0",
-        "energy_state": "Unified Resonance Active"
-    }), 200
+# ===========================
+# CẤU HÌNH CƠ BẢN
+# ===========================
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+CORE_PATH = os.path.join(ROOT_PATH, "core")
+LOG_PATH = os.path.join(CORE_PATH, "logs")
+os.makedirs(LOG_PATH, exist_ok=True)
+LOG_FILE = os.path.join(LOG_PATH, "quantum_server_startup.log")
 
 
-# ==========================================================
-# ⚛️ Quantum Stabilizer Core (40 tầng điều hòa)
-# ==========================================================
-class QuantumStabilizerCore:
-    def __init__(self):
-        self.global_energy = 4.82
-        self.stability_index = 1.0
-        self.cycle = 0
-        self.entanglement_memory = []
-
-    def stabilize(self, field_layers):
-        self.cycle += 1
-        avg_energy = sum(field_layers) / len(field_layers)
-        variance = sum((x - avg_energy) ** 2 for x in field_layers) / len(field_layers)
-        resonance = math.exp(-variance * 10)
-
-        self.global_energy = (self.global_energy * 0.98) + (avg_energy * 0.02)
-        self.stability_index = (self.stability_index * 0.9) + (resonance * 0.1)
-
-        # Lưu lịch sử năng lượng cho QEG
-        self.entanglement_memory.append({
-            "cycle": self.cycle,
-            "energy": self.global_energy,
-            "resonance": self.stability_index
-        })
-        if len(self.entanglement_memory) > 60:
-            self.entanglement_memory.pop(0)
-
-        return {
-            "cycle": self.cycle,
-            "avg_energy": round(avg_energy, 5),
-            "stability_index": round(self.stability_index, 5),
-            "global_energy": round(self.global_energy, 5)
-        }
+def log(msg: str):
+    """Ghi log khởi động hệ thống."""
+    ts = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    text = f"{ts} {msg}"
+    print(text)
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(text + "\n")
 
 
-# ==========================================================
-# 🌐 Quantum Entanglement Grid (Tầng 41)
-# ==========================================================
-class QuantumEntanglementGrid:
-    def __init__(self):
-        self.entropy_level = 0.01
-        self.sync_strength = 1.0
-        self.last_energy_field = None
+# ===========================
+# KIỂM TRA MÔI TRƯỜNG
+# ===========================
+def check_environment():
+    log("🔍 Đang kiểm tra môi trường hệ thống ...")
+    python_ver = sys.version.split()[0]
+    os_info = platform.platform()
+    log(f"🧠 Python version: {python_ver}")
+    log(f"💻 Hệ điều hành: {os_info}")
 
-    def unify(self, stabilizer: QuantumStabilizerCore):
-        if not stabilizer.entanglement_memory:
-            return None
+    required_version = (3, 8)
+    if sys.version_info < required_version:
+        log("⚠️ Phiên bản Python quá thấp. Cần >= 3.8")
+        sys.exit(1)
 
-        # Phân tích dao động 5 chu kỳ gần nhất
-        recent = stabilizer.entanglement_memory[-5:]
-        avg_energy = sum(e["energy"] for e in recent) / len(recent)
-        avg_resonance = sum(e["resonance"] for e in recent) / len(recent)
-
-        # Cân bằng tần số hợp nhất
-        coherence = (avg_resonance + stabilizer.stability_index) / 2
-        delta = abs(avg_energy - stabilizer.global_energy)
-        self.sync_strength = max(0.8, 1 - delta * 5)
-
-        unified_energy = (avg_energy * coherence * self.sync_strength)
-        self.last_energy_field = unified_energy
-
-        print(f"[QEG⚡] Unified Field → {unified_energy:.5f} | Sync {self.sync_strength:.3f} | Coherence {coherence:.3f}")
-        return unified_energy
+    try:
+        import importlib, json
+        log("✅ Các thư viện cơ bản đã sẵn sàng.")
+    except ImportError as e:
+        log(f"❌ Thiếu thư viện cần thiết: {e}")
+        sys.exit(1)
 
 
-# ==========================================================
-# 🌌 Chu trình lượng tử tổng hợp
-# ==========================================================
-def quantum_loop():
-    stabilizer = QuantumStabilizerCore()
-    qeg = QuantumEntanglementGrid()
+# ===========================
+# KHỞI TẠO PIPELINE LƯỢNG TỬ
+# ===========================
+def start_quantum_pipeline():
+    """Chạy hệ thống lượng tử qua loader."""
+    from core.quantum_core_loader import run_loader
 
-    while True:
-        # 40 tầng năng lượng mô phỏng
-        layers = [4.7 + random.uniform(-0.1, 0.1) for _ in range(40)]
-        stats = stabilizer.stabilize(layers)
-        unified = qeg.unify(stabilizer)
+    log("\n⚙️  ĐANG KHỞI ĐỘNG QUANTUM CORE SERVER ...")
+    start = time.time()
+    result = run_loader()
+    duration = time.time() - start
 
-        print(f"🔄 Cycle {stats['cycle']:03d} | "
-              f"Avg {stats['avg_energy']} | "
-              f"Global {stats['global_energy']} | "
-              f"Stable {stats['stability_index']:.4f}")
+    log("\n" + "=" * 90)
+    log(f"🪐 KẾT THÚC QUÁ TRÌNH KHỞI TẠO QUANTUM CORE SERVER")
+    log(f"   ⏱️  Thời gian tổng: {duration:.2f}s")
+    log("=" * 90)
 
-        time.sleep(5)
-
-
-# ==========================================================
-# 🛰️ KeepAlive (ngăn Render sleep)
-# ==========================================================
-def keep_alive():
-    url = "https://auto-quantum-core-server.onrender.com"
-    while True:
-        try:
-            requests.get(url)
-            print("🌐 KeepAlive ping → OK")
-        except Exception as e:
-            print("⚠️ KeepAlive lỗi:", e)
-        time.sleep(600)
+    # Hiển thị kết quả tóm tắt
+    total, success, failed = result["total"], result["success"], result["failed"]
+    log(f"📊 TỔNG TẦNG: {total}, THÀNH CÔNG: {success}, LỖI: {failed}")
+    if failed == 0:
+        log("🌈 TOÀN BỘ HỆ THỐNG QUANTUM CORE ĐÃ SẴN SÀNG HOẠT ĐỘNG.")
+    else:
+        log("⚠️ MỘT SỐ TẦNG CHƯA NẠP ĐƯỢC – KIỂM TRA LOG CHI TIẾT.")
 
 
-# ==========================================================
-# 🚀 Main Entry
-# ==========================================================
+# ===========================
+# CHẾ ĐỘ RELOAD NHANH
+# ===========================
+def auto_reload(delay=10):
+    """Tự động reload pipeline mỗi X giây (tùy chọn)."""
+    log(f"🔁 Kích hoạt chế độ auto-reload mỗi {delay}s (bấm Ctrl+C để dừng).")
+    try:
+        while True:
+            start_quantum_pipeline()
+            log(f"🌀 Chờ {delay}s trước khi reload lại pipeline ...")
+            time.sleep(delay)
+    except KeyboardInterrupt:
+        log("🧘‍♂️ Auto-reload dừng theo yêu cầu người dùng.")
+
+
+# ===========================
+# MAIN ENTRY
+# ===========================
 if __name__ == "__main__":
-    print("🚀 Quantum Core Server Pro + QEG (Tầng 41) khởi động...")
-    print("🌠 Hệ thống năng lượng hợp nhất Thiên – Địa – Nhân đang kích hoạt...\n")
+    log("=" * 90)
+    log("🚀 KHỞI ĐỘNG QUANTUM CORE SERVER PRO – phiên bản 2.0")
+    log("=" * 90)
+    check_environment()
 
-    threading.Thread(target=quantum_loop, daemon=True).start()
-    threading.Thread(target=keep_alive, daemon=True).start()
+    # Chạy hệ thống chính
+    start_quantum_pipeline()
 
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    # Nếu bạn muốn auto reload liên tục, bật dòng dưới:
+    # auto_reload(delay=30)
